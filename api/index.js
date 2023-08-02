@@ -5,8 +5,10 @@ const  mongoose = require("mongoose");
 const User=require('./models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
 
 const app=express();
+app.use(cookieParser())
 
 const salt=bcrypt.genSaltSync(10);
 const secret = 'asdfe45we45w345wegw345werjktjwertkj';
@@ -57,6 +59,21 @@ app.post('/login',async(req, res)=>{
 }
 );
 
+app.get('/profile',(req, res) => {
+
+    console.log('Cookies: ', req.cookies);
+    console.log('signed Cookies: ', req.signedCookies);
+
+    const{token}=req.cookies;
+    jwt.verify(token,secret,{},(err,info)=>{
+
+        if(err) throw err;
+
+        res.json(info);
+    }
+    )
+}
+)
 
 app.listen(4000,()=>{
     console.log('listening on port 4000');
