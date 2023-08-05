@@ -75,6 +75,10 @@ app.get('/profile',(req, res) => {
 }
 )
 
+app.post('/logout',(req,res)=>{
+    res.cookie('token','').json('ok');
+})
+
 app.listen(4000,()=>{
     console.log('listening on port 4000');
 });
