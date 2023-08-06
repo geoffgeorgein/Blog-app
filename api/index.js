@@ -82,7 +82,7 @@ app.get('/profile',(req, res) => {
 );
 
 app.get('/post',async(req, res)=>{
-    const posts=await Post.find();
+    const posts=await Post.find().populate('author',['username']);
 
     res.json(posts);    
 })
@@ -97,18 +97,30 @@ app.post('/post',uploadMiddleware.single('file'),async(req, res)=>{
     console.log("body")
     fs.renameSync(path, newPath);
 
+    const{token}=req.cookies;
+    jwt.verify(token,secret,{},async(err,info)=>{
+
+        if(err) throw err;
+
+        const {title,summary,content}=req.body;
+
+        const postDoc= await Post.create({
+            title,
+            summary,
+            content,
+            cover:newPath,
+            author:info.id,     
+
+        })
+   
+
+        res.json(postDoc);
+    }
+    )
+
     
 
-    const {title,summary,content}=req.body;
-
-    const postDoc= await Post.create({
-        title,
-        summary,
-        content,
-        cover:newPath,
-
-    })
-    res.json(postDoc);
+    
 
 
     // res.json('ok')
