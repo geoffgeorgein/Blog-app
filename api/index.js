@@ -82,7 +82,10 @@ app.get('/profile',(req, res) => {
 );
 
 app.get('/post',async(req, res)=>{
-    const posts=await Post.find().populate('author',['username']);
+    const posts=await Post.find().
+    populate('author',['username'])
+    .sort({createdAt:-1})
+    .limit(20);
 
     res.json(posts);    
 })
