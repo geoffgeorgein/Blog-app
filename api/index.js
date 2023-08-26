@@ -18,8 +18,10 @@ app.use(cookieParser())
 const salt=bcrypt.genSaltSync(10);
 const secret = 'asdfe45we45w345wegw345werjktjwertkj';
 
+const local="https://localhost:3000";
+const render='https://blog-m8ji.onrender.com';
 
-app.use(cors({credentials:true,origin:'https://blog-m8ji.onrender.com/'}));
+app.use(cors({credentials:true}));
 app.use(express.json());
 app.use('/uploads', express.static(__dirname + '/uploads'));    
 
@@ -82,6 +84,7 @@ app.get('/profile',(req, res) => {
 );
 
 app.get('/post',async(req, res)=>{
+    
     const posts=await Post.find().
     populate('author',['username'])
     .sort({createdAt:-1})
