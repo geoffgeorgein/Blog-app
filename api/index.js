@@ -9,23 +9,40 @@ const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const multer  = require('multer')
 const fs= require('fs');
+var morgan = require('morgan')
 // const upload = multer({ dest: 'uploads/' });
 const uploadMiddleware = multer({ dest: 'uploads/' });
 
 const app=express();
 app.use(cookieParser())
+app.use(morgan("tiny"))
 
 const salt=bcrypt.genSaltSync(10);
 const secret = 'asdfe45we45w345wegw345werjktjwertkj';
 
-const local="https://localhost:3000";
+const local="http://localhost:3000";
 const render='https://blog-m8ji.onrender.com';
 
-app.use(cors({credentials:true}));
+// app.use(cors({credentials:true}));
+app.use(cors());
 app.use(express.json());
 app.use('/uploads', express.static(__dirname + '/uploads'));    
 
 mongoose.connect('mongodb+srv://geoffgeorge107:Ag2M7UvZx9JdxY4L@cluster1.r6awora.mongodb.net/?retryWrites=true&w=majority')
+
+app.use((req, res, next) => {
+    const corsWhitelist = [
+        'https://task-app-hazel-pi.vercel.app/',
+        'http://127.0.0.1:5173',
+        
+    ];
+    if (corsWhitelist.indexOf(req.headers.origin) !== -1) {
+        res.header('Access-Control-Allow-Origin', req.headers.origin);
+        res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    }
+
+    next();
+});
 
 
 app.get('/',(req,res)=>{
