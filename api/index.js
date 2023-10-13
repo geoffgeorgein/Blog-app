@@ -32,7 +32,7 @@ mongoose.connect('mongodb+srv://geoffgeorge107:Ag2M7UvZx9JdxY4L@cluster1.r6awora
 
 app.use((req, res, next) => {
     const corsWhitelist = [
-        'https://task-app-hazel-pi.vercel.app/',
+        'http://localhost:3000',
         'http://127.0.0.1:5173',
         
     ];
@@ -64,6 +64,7 @@ app.post('/login',async(req, res)=>{
     
     const {username,password} = req.body;
     const userDoc=await User.findOne({username});
+    console.log("User",username);
 
     const passOK=bcrypt.compareSync(password,userDoc.password);
     // res.json(passOK);
